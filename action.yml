@@ -1,0 +1,155 @@
+name: 'Durgaai Waka Stats'
+author: Durgaai Solutions
+description: 'Discover When A Developer Is Most Productive, What Tools They Use, And How They Code — Beautifully Presented In Their GitHub README. Powered By Durgaai Solutions.'
+
+inputs:
+  GH_TOKEN:
+    description: 'GitHub Access Token With Repo Scope'
+    required: true
+
+  WAKATIME_API_KEY:
+    description: 'WakaTime API Key'
+    required: true
+
+  SECTION_NAME:
+    description: 'Name Used In README To Scope The Updated Section'
+    required: false
+    default: "Waka Update"
+
+  PULL_BRANCH_NAME:
+    required: false
+    description: "The Branch To Pull The README From"
+    default: ""
+
+  PUSH_BRANCH_NAME:
+    required: false
+    description: "The Branch To Push The Updated README To"
+    default: ""
+
+  SHOW_OS:
+    required: false
+    description: 'Display The Operating Systems Used'
+    default: "True"
+
+  SHOW_PROJECTS:
+    required: false
+    description: 'Display The List Of Active Projects'
+    default: "True"
+
+  SHOW_EDITORS:
+    required: false
+    description: 'Display The Development Editors Used'
+    default: "True"
+
+  SHOW_TIMEZONE:
+    required: false
+    description: 'Display The Time Zone'
+    default: "True"
+
+  SHOW_COMMIT:
+    required: false
+    description: "Display The Commit Graph"
+    default: "True"
+
+  SHOW_LANGUAGE:
+    required: false
+    description: "Display The Programming Languages Used"
+    default: "True"
+
+  SHOW_LINES_OF_CODE:
+    required: false
+    description: "Display A Badge For Total Lines Of Code Written To Date"
+    default: "False"
+
+  SHOW_LANGUAGE_PER_REPO:
+    required: false
+    description: "Display Languages/Frameworks Used Per Repository"
+    default: "True"
+
+  SHOW_LOC_CHART:
+    required: false
+    description: "Display Lines-Of-Code Chart"
+    default: "True"
+
+  SHOW_DAYS_OF_WEEK:
+    required: false
+    description: "Display Most Productive Day(s) Of The Week"
+    default: "True"
+
+  SHOW_PROFILE_VIEWS:
+    required: false
+    description: "Display Current GitHub Profile View Count"
+    default: "True"
+
+  SHOW_SHORT_INFO:
+    required: false
+    description: "Display Short Developer Profile Facts"
+    default: "True"
+
+  SHOW_UPDATED_DATE:
+    required: false
+    description: "Display Last Updated Timestamp"
+    default: "True"
+
+  SHOW_TOTAL_CODE_TIME:
+    required: false
+    description: "Display Total Time Spent Coding"
+    default: "True"
+
+  COMMIT_BY_ME:
+    required: false
+    description: "Commit Using A Custom Name And Email"
+    default: "False"
+  
+  COMMIT_MESSAGE:
+    required: false
+    description: "Custom Git Commit Message"
+    default: "Updated With Durgaai Waka Stats"
+
+  COMMIT_USERNAME:
+    required: false
+    description: "Custom Git Username For Commits"
+    default: ""
+  
+  COMMIT_EMAIL:
+    required: false
+    description: "Custom Git Email For Commits"
+    default: ""
+
+  COMMIT_SINGLE:
+    required: false
+    description: "Overwrite Previous Commit History On Each Run"
+    default: "False"
+
+  LOCALE:
+    required: false
+    description: "Set The Locale For Localized Stats Display"
+    default: "en"
+
+  UPDATED_DATE_FORMAT:
+    required: false
+    description: "Format Of The Updated Date String"
+    default: "%d/%m/%Y %H:%M:%S"
+
+  IGNORED_REPOS:
+    required: false
+    description: "Comma-Separated List Of Repositories To Exclude From Stats"
+    default: ""
+
+  SYMBOL_VERSION:
+    required: false
+    description: "Style Version Of Progress Bar Symbols"
+    default: "1"
+
+  DEBUG_LOGGING:
+    required: false
+    description: "Enable Debug Logging For This Action"
+    default: "False"
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+
+branding:
+  icon: 'activity'
+  color: 'green'
