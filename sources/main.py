@@ -66,9 +66,9 @@ async def get_short_github_info() -> str:
 
     hire_status = "Durgaai Solutions Is Open to Hire" if GHM.USER.hireable else "Durgaai Solutions Is Not Open to Hire"
     stats += f"> {'💼' if GHM.USER.hireable else '🚫'} {hire_status} \n > \n"
-    stats += f"> 📜 public repositories: {GHM.USER.public_repos} \n > \n"
+    stats += f"> 📜 Public Repositories: {GHM.USER.public_repos} \n > \n"
     private = GHM.USER.owned_private_repos or 0
-    stats += f"> 🔑 private repositories: {private} \n > \n"
+    stats += f"> 🔑 Private Repositories: {private} \n > \n"
 
     DBM.g("Short GitHub Info Added!")
     return stats
