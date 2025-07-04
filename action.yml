@@ -14,7 +14,7 @@ inputs:
   SECTION_NAME:
     description: 'Name Used In README To Scope The Updated Section'
     required: false
-    default: "Waka Update"
+    default: "waka"
 
   PULL_BRANCH_NAME:
     required: false
