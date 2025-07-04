@@ -1,0 +1,24 @@
+name: Pull Request Labeler
+
+on:
+  pull_request_target:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    name: Apply Labels to Pull Request
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository 🛎️
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}
+
+      - name: Run Labeler 🤖
+        uses: actions/labeler@v5
+        with:
+          sync-labels: true

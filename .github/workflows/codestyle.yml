@@ -1,0 +1,50 @@
+name: Code Style Check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Run Code Style Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code 🛎️
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install Requirements 📦
+        run: |
+          pip install -r requirements.txt
+          pip install flake8 black
+      - name: Run flake8 Linter 🚨
+        run: flake8 --max-line-length=160 --exclude venv,assets .
+
+      - name: Check Black Formatter 🖤
+        run: black --line-length=160 --check --exclude='/venv/|/assets/' .
+
+      - name: Auto-format with Black & Commit if needed 💾
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          black --line-length=160 --exclude='/venv/|/assets/' .
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "style: auto-format with Black (line-length=160)"
+            git push
+          else
+            echo "No Formatting Changes To Commit."
+          fi   

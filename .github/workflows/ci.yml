@@ -1,0 +1,116 @@
+name: CI - Durgaai Waka Stats
+
+on:
+  - pull_request_target
+  - workflow_dispatch
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Run Durgaai Waka Stats Test and Review PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.13 🐍
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+          cache: 'pip'
+
+      - name: Install Dependencies 📥
+        run: pip install -r requirements.txt
+
+      - name: Format Code with Black 🖤
+        run: |
+          pip install black
+          black --line-length=160 --exclude='/venv/|/assets/' .
+
+      - name: Commit Black Formatting ✨
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "style: auto-format with Black"
+            git push
+          else
+            echo "No formatting changes to commit."
+          fi
+        continue-on-error: true 
+
+      - name: Create Assets Folder 📁
+        run: mkdir -p assets
+
+      - name: Hide Previous Stats Comment 🫣
+        uses: int128/hide-comment-action@v1
+        with:
+          starts-with: "README Stats Current Output :"
+
+      - name: Run Durgaai Waka Stats Preview 🧪
+        id: make-stats
+        env:
+          INPUT_GH_TOKEN: ${{ secrets.INPUT_GITHUB_TOKEN }}
+          INPUT_WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+          INPUT_SHOW_TIMEZONE: True
+          INPUT_SHOW_PROJECTS: True
+          INPUT_SHOW_EDITORS: True
+          INPUT_SHOW_OS: True
+          INPUT_SHOW_LANGUAGE: True
+          INPUT_SYMBOL_VERSION: 1
+          INPUT_SHOW_LINES_OF_CODE: True
+          INPUT_SHOW_LOC_CHART: True
+          INPUT_SHOW_PROFILE_VIEWS: True
+          INPUT_SHOW_TOTAL_CODE_TIME: True
+          INPUT_SHOW_SHORT_INFO: True
+          INPUT_SHOW_COMMIT: True
+          INPUT_SHOW_DAYS_OF_WEEK: True
+          INPUT_SHOW_LANGUAGE_PER_REPO: True
+          INPUT_SHOW_UPDATED_DATE: True
+          INPUT_COMMIT_BY_ME: True
+          INPUT_DEBUG_LOGGING: True # Not for prod
+          DEBUG_RUN: True           # Not for prod
+        run: python3 sources/main.py
+
+      - name: Save Branch Name Without Slashes 📛
+        if: ${{ github.ref != 'refs/heads/master' }}
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+        run: |
+          BRANCH_NAME=${{ env.BRANCH_NAME }}
+          BRANCH_NAME=${BRANCH_NAME////_}
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> $GITHUB_ENV
+
+      - name: Upload Artifact 📦
+        uses: actions/upload-artifact@v4
+        if: ${{ github.ref != 'refs/heads/master' }}
+        with:
+          name: ${{ format('durgaai-waka-stats-preview-{0}', env.BRANCH_NAME) }}
+          path: assets
+
+      - name: Extract Comment Output 🧾
+        id: extract-comment
+        run: |
+          COMMENT_FILE="${GITHUB_OUTPUT}"
+          COMMENT_CONTENT=$(grep -A 1000 'README Stats Current Output :' "$COMMENT_FILE" | tail -n +2)
+          COMMENT_CONTENT=$(echo "$COMMENT_CONTENT" | sed '/^$/q')
+          echo "COMMENT_BODY<<EOF" >> $GITHUB_ENV
+          echo "$COMMENT_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Comment Preview on PR 💬
+        if: env.COMMENT_BODY != ''
+        uses: jungwinter/comment@v1
+        with:
+          type: create
+          body: ${{ env.COMMENT_BODY }}
+          issue_number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
