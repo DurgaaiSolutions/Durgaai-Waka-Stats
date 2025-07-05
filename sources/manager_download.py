@@ -120,7 +120,7 @@ class DownloadManager:
             if isinstance(resource, Task):
                 resource.cancel()
             elif isinstance(resource, Awaitable):
-                await resource
+                pass
         await DownloadManager._client.aclose()
 
     @staticmethod
