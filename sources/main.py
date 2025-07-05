@@ -107,7 +107,7 @@ async def get_stats() -> str:
     if EM.SHOW_LINES_OF_CODE:
         total_loc = sum(yearly_data[y][q][d]["add"] for y in yearly_data for q in yearly_data[y] for d in yearly_data[y][q])
         data_str = f"{intword(total_loc)} Lines of code"
-        stats += f"![Lines of code](https://img.shields.io/badge/From%20Hello%20World%20the%20Team%20Has%20Written-{quote(data_str)}-blue)\n\n"
+        stats += f"![Lines of code](https://img.shields.io/badge/From%20Hello%20World%20The%20Team%20Has%20Written-{quote(data_str)}-blue)\n\n"
 
     if EM.SHOW_SHORT_INFO:
         stats += await get_short_github_info()
