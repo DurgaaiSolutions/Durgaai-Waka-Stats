@@ -11,8 +11,8 @@ WEEK_DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 
 
 class Symbol(Enum):
-    VERSION_1 = "🞔", "🞎"
-    VERSION_2 = "⣿", "⣀"
+    VERSION_1 = "▰", "▱"
+    VERSION_2 = "🞔", "🞎"
     VERSION_3 = "⬛", "⬜"
 
     @staticmethod
